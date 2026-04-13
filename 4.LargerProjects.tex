@@ -1,0 +1,31 @@
+\documentclass[]{article}
+\usepackage[margin = .75in]{geometry}
+
+\begin{document}
+\section{Larger documents}
+- Keep things small
+
+- Keeping the preamble clean and organized as it grows
+\section{Collaboration}
+\section{ToC, Lo\*}
+\section{Bibliography \& Citations}
+- BibLaTeX vs. BibTeX — why BibLaTeX is usually preferred now
+
+- Citation styles (numeric, author-year, Chicago, etc.)
+
+- Managing `.bib` files with tools like Zotero or JabRef
+
+- Multiple bibliographies, annotated bibliographies
+\section{Organizing your project}
+\verb|include|, \verb|input|
+\section{Modular LaTeX}
+\subsection{Subfiles}
+\subsection{Standalone document class}
+\subsubsection{Complicated TikZ, TikZ-cd, and Tables}
+A good use case for the standalone document class is to use the \verb|crop| option. If you have a complicated TikZ picture or table, this can add a lot of compilation time to your document. Instead of including the raw text, we can instead create a new project with \verb|\documentclass[crop = true]{standalone}| to compile a minimally sized pdf that we can save and import instead. See \verb|/Examples/standalone_SmallExample.tex| as an example.
+\section{Index \& Glossaries}
+- Generating an index with `makeidx` or `imakeidx`
+
+- Glossaries and acronym management with the `glossaries` package
+\section{Beamer projects}
+\end{document}

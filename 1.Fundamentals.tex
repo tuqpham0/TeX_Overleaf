@@ -9,7 +9,7 @@
         \item Typesetting basic math
         \item Enumeration and itemization
     \end{itemize}
-    All details will be made clear in the generated PDF and that is the recommended guide, but you can also follow along in the source file (which uses material not yet covered)
+    All details will be made clear in the generated PDF and that is the recommended guide, but you can also follow along in the source file (which uses material not yet covered).
     
     \section{The Core}
     A LaTeX file is a \verb|.tex| file. Which LaTeX will then run through and compile, exporting a lot of other files, most important to you is the \verb|.pdf| file. These other files can include an error file, .dvi file, and others. Overleaf will generally suppress other files and allow you to view the pdf file and download it. Later, we will augment this by adding a bibliography file and more.
@@ -34,33 +34,33 @@
             
         \verb|\end{document}|
 
+    For publishing, there are usually provided document .cls files (usually publicly available like mdpi and lipics). In these cases, you can \verb|import| the .cls files and other required files, and change your document class accordingly. 
+
     \section{Writing LaTeX `code'}
     Now that we can generate a PDF, we can talk about formatting and legibility. As TeX is a coding language, mistakes can lead to errors that prevent it from compiling and generating a PDF or warnings that sometimes shouldn't be ignored. Thus, to be able to debug your project is an important part of writing a project. In this section we will give some general TeX writing philosophy that makes this easier to do.
     
     Paragraphs should be separated by blank line, this is a standard practice and makes your project more legible before compilation. This does \textit{not} translate into a blank line between paragraphs in the generated pdf file (as seen here), since that is controlled by the \verb|documentclass| by default. LaTeX is whitespace-insensitive in most contexts. Multiple empty lines between paragraphs will generate the same thing as a single blank line between paragraphs, and \verb|`this                      code'| compiles to `this                                code'.
     Note that if you have a new line (without the blank line), then TeX maintains the paragraph. For example:
-    
-    \verb|`Tex will|
-
-    \verb|still|
-
-    \verb|render the text as the same paragraph.'|
-    
+\begin{verbatim}
+`Tex will
+still
+render the text as the same paragraph.
+\end{verbatim}
     Compiles to: `TeX will
     still
-    render the text as the same paragraph.' We will cover other ways of controlling white space later.
+    render the text as the same paragraph.' We will cover other ways of controlling white space later.\vspace{1em}
 
     Returning to our previous example:
-
-        \verb|\documentclass{|$\bullet$\verb|}|
-        
-        \verb|\begin{document}|
-
-            \quad Hello world!
-            
-        \verb|\end{document}|
-
+    \begin{verbatim}
+\documentclass{Chosen class}
+\begin{document}
+    Hello world!
+\end{document}
+    \end{verbatim}
     The indent before `Hello world!' will not change the output. Borrowing from other programming languages' stylings, this author recommends using indent layers as a method for tracking most \verb|environments|.
+
+    Another code-like property is comments. To comment a line in LaTeX, you can preface it with a \% sign. Anything after a \%  will be ignored by the compiler and not appear within your final rendered document. So the line \verb|% this won't appear in the document| will not appear although it is in the .tex file. % this won't appear in the document
+    Commented lines do not break paragraphs, as they are not blank lines, and comments can begin anywhere in a line. Like in programming, you can use comments for documentation and organization. This is seen in \verb|2.Beginners.tex|.
 
     Most errors won't occur when writing plain English, and will mostly come from typesetting mathematics and doing more complicated things.
     
@@ -69,16 +69,14 @@
     
     Within math mode, you unlock commands that would otherwise throw an error in LaTeX. For example in: \verb|$y = \ln(x)$| will generate $y = \ln(x)$. The command \verb|\ln| can only be used within math mode and TeX will throw an error if it is used in plain text. Some commands you might want to use are not included in default TeX, and we will get to those in the subsequent file. While math mode is an environment, if the math is not too intrusive, it does not need its own indentation layer.
 
-    Commands (or macros), like \verb|\ln|, are akin to \verb|functions| in other programming languages. They can have \verb|arguments|, which are grouped by pairs of curly braces: \{\}. For example, $\verb|\sqrt{}|$ is a macro with one argument, while $\verb|\frac{n}{d}|$ has two arguments. There are a handful of macros that don't require curly braces, but more often than not, using curly braces will help debugging errors and help reading TeX, especially when nesting math macros.
+    Commands (or macros), like \verb|\ln|, are akin to \verb|functions| in other programming languages. They can have required \verb|arguments|, which are grouped by pairs of curly braces: \{\}. For example, $\verb|\sqrt{}|$ is a macro with one required argument, while $\verb|\frac{n}{d}|$ has two required arguments. There are macros with no required arguments, such as \verb|\ln|. Using curly braces will help debugging errors and help reading TeX, especially when nesting math macros.
 
     For a single centered line of math, we can use another environment: the \verb|equation| environment. This environment follows the same pattern as the document environment. For example,
-    
-    \verb|\begin{displaymath}|
-
-    \qquad\verb|x = \frac{-b\pm\sqrt{b^2-4ac}}{2a}|
-    
-    \verb|\end{displaymath}|
-
+    \begin{verbatim}
+\begin{displaymath}
+    x = \frac{-b\pm\sqrt{b^2-4ac}}{2a}
+\end{displaymath}
+    \end{verbatim}
     renders as:
     \begin{displaymath}
         x = \frac{-b\pm\sqrt{b^2-4ac}}{2a}
@@ -86,30 +84,51 @@
 
     Which can be shortcut by: \verb|\[x = \frac{-b\pm\sqrt{b^2-4ac}}{2a}\]| for the same output. Without \verb|packages| we are limited by what we can really do. So we will end our basics lesson with two more types of environments before moving further into LaTeX.
 
-    \section{Enumeration and Itemization}
+    For super/sub-scripts, while in math mode, LaTeX has built in options by using \verb|^| and \verb|_| respectively. For example, \verb|$x^4$| renders as $x^4$ and \verb|$a_k$| renders as $a_k$.
+
+    \section{Enumeration, itemization, and organization}
     For numbered lists, we can use the \verb|enumerate| environment, and for bulleted lists, we can use the \verb|itemize| environment. Both will use \verb|\item| to define an entry in the list. For example,
-
-    \verb|\begin{enumerate}|
-
-    \qquad\verb|\item|\ An entry!
-    
-    \verb|\end{enumerate}|
-    
+\begin{verbatim}
+\begin{enumerate}
+    \item An entry!
+\end{enumerate}
+\end{verbatim}    
     will compile as:
     \begin{enumerate}
         \item An entry!
     \end{enumerate}
     and 
-    
-    \verb|\begin{itemize}|
-
-    \qquad\verb|\item|\ A new list entry
-    
-    \verb|\end{itemize}|
+\begin{verbatim}
+\begin{itemize}
+    \item A new list entry
+\end{itemize}
+\end{verbatim}
     appears as:
     \begin{itemize}
         \item A new list entry
     \end{itemize}
 
     We will talk about list customization later for changing bullet points, using roman numerals, etc.
+    
+    \setcounter{section}{0}
+    A default behavior of most document classes is the ability to automatically count sections, subsections, etc. These will automatically be tracked by LaTeX and labeled correctly. We will talk about manipulating counters later. If we have the following at the beginning of a new document:
+    
+    \begin{verbatim}
+\section{Section Title}
+\subsection{Subsection Title}
+\section*{An un-numbered section}
+\subsection{A new subsection}
+\section{Increments section counter}
+\subsection{Another subsection, leading value incremented}
+\subsection{increment}
+\subsubsection{depth}
+    \end{verbatim}
+    
+    \section{Section Title}
+    \subsection{Subsection Title}
+    \section*{An un-numbered section}
+    \subsection{A new subsection}\section{Increments section counter}\subsection{Another subsection, leading value incremented}
+    \subsection{increment}
+    \subsubsection{depth}
+    Note that the sections are automatically formatted in text size and labeling, and the un-numbered section does \textit{not} increment the leading digit of the subsequent subsection label. Looking forward, \*'s will often be used to remove something from being automatically enumerated by LaTeX.
 \end{document}

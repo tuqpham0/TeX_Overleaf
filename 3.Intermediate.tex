@@ -1,0 +1,42 @@
+\documentclass[]{article}
+\usepackage[margin = .75in]{geometry}
+\usepackage{hyperref}
+
+\title{Intermediate Guide to LaTeX}
+\author{GMA - UF Mathematics}
+\date{A date or \today works}
+
+\begin{document}
+\maketitle
+Some document classes have default parameters for \verb|title|, \verb|author|, \verb|date| which are set in the preamble by the commands: \verb|\title{title}|, \verb|\author{yours and collaborator names}|, \verb|\date{\today or a specific date}|. To then render these within the document, we use the command \verb|\maketitle|, which will render the above triplet. If \verb|\maketitle| is called after text, it will start a new page before rendering.
+
+\section{Custom commands}
+\verb|\newcommand|, \verb|\renewcommand|, \verb|arguments| (optional/required), \verb|\newenvironment|, 
+\section{Counters}
+
+\section{More details}
+\subsection{Figures}
+subcaption, wrapfig
+
+\subsection{Tables}
+Multi row/col
+\subsection{Clever Refs}
+
+
+\section{Version control}
+\href{https://learngitbranching.js.org/}{Learn GIT}
+
+\section{TikZ, pgfplots, and TikZ-cd}
+\end{document}
+
+**Workflow & Tooling**
+- Understanding the full compilation pipeline (pdflatex → biber → pdflatex × 2)
+- Makefiles and `latexmk` for automated builds
+- Version control strategies for collaborative LaTeX projects
+- Diffing LaTeX documents with `latexdiff`
+
+**Debugging & Optimization**
+- Interpreting and fixing common warnings (overfull/underfull hboxes)
+- Suppressing vs. resolving package conflicts
+
+The key shift at this level is moving from *using* LaTeX to *controlling* it — writing reusable commands, managing large projects, and producing output that looks genuinely professional rather than just functional.
