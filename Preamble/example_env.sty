@@ -1,0 +1,27 @@
+\usepackage{mdframed}
+
+\mdfdefinestyle{exframe}{%
+  topline=false,
+  bottomline=false,
+  rightline=false,
+  leftline=true,
+  linewidth=0.4pt,
+  linecolor=black,
+  innerleftmargin=0.5em,
+  innerrightmargin=0pt,
+  innertopmargin=-.5em,
+  innerbottommargin=2pt,
+  skipabove=5pt,
+  skipbelow=0pt,
+  leftmargin=1em,
+  rightmargin=0pt,
+}
+
+\newenvironment{example}{%
+  \begin{mdframed}[style=exframe]%
+
+  \textbf{Example:}
+  
+}{%
+  \end{mdframed}%
+}

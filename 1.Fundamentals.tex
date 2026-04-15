@@ -65,7 +65,7 @@ render the text as the same paragraph.
     Most errors won't occur when writing plain English, and will mostly come from typesetting mathematics and doing more complicated things.
     
     \section{Typesetting math}
-    For writing things in a mathematical style, you need to enter `math mode', which is similar to an \verb|environment|. In contrast to an environment, we can simply use \$'s\footnote{You can also use \texttt{\textbackslash(} to begin and \texttt{\textbackslash)} to end math mode, but \$'s are standard.} as delimiters, but similarly to the document environment, these \textbf{`begin'} and \textbf{`end'} math mode.
+    For writing things in a mathematical style, you need to enter `math mode', which is similar to an \verb|environment|. In contrast to an environment, we can simply use \$'s\footnote{You can also use \texttt{\textbackslash(} or \texttt{\textbackslash begin\{math\}} to begin and \texttt{\textbackslash)} or \texttt{\textbackslash end\{math\}} to end math mode, but \$'s are standard.} as delimiters, but similarly to the document environment, these \textbf{`begin'} and \textbf{`end'} math mode.
     
     Within math mode, you unlock commands that would otherwise throw an error in LaTeX. For example in: \verb|$y = \ln(x)$| will generate $y = \ln(x)$. The command \verb|\ln| can only be used within math mode and TeX will throw an error if it is used in plain text. Some commands you might want to use are not included in default TeX, and we will get to those in the subsequent file. While math mode is an environment, if the math is not too intrusive, it does not need its own indentation layer.
 

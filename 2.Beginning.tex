@@ -148,6 +148,7 @@ Regular text formatting offered by other word processors are offered in LaTeX vi
     \item \verb|\textbf{}| - \textbf{bold text}, used outside of math mode, \verb|ctrl + b| Overleaf hotkey
     \item \verb|\mathbb{}| - blackboard bold, used inside math mode. ex: $\mathbb{R,C,Q}$
     \item \verb|\textit{}| - \textit{italicized}, used outside of math mode, \verb|ctrl + i| Overleaf hotkey
+    \item \verb|\emph{}| - \emph{emphasized} words. Not always italicized, can change depending on package/document class, or by your own modification
     \item \verb|\mathcal{}| - math cursive, used inside math mode. ex: $\mathcal{T, C,M}$
     \item \verb|\underline{}| - underlined text
     \item \verb|\underbrace{}_{}| - $\underbrace{\text{Underbraces inside math mode}}_{\text{with an option for text below}}$
@@ -200,10 +201,10 @@ Other examples of automatic labels and references are \verb|footnotes|, which ar
 \section{Error Handling}\label{sec:Errors}
 When we get compilation errors, the best way to remedy them is to look for keywords. Throughout these pages, I have tried to define certain keywords for easier translation of errors into English. If you have an error you cannot parse, a search engine is your best friend. But as a list of common errors in no particular order:
 \begin{itemize}
-    \item Missing mathmode
-    \item Missing matching curly brace
-    \item incorrect command
-    \item Too many alignment indicators
+    \item Missing math mode
+    \item Missing matching curly braces
+    \item incorrect commands
+    \item Too many/few alignment indicators
 \end{itemize}
 There are also warnings, which can often be ignored. For example, this document has a lot of the following warnings, and I don't have the energy to fix them.
 \begin{itemize}

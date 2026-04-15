@@ -1,20 +1,142 @@
 \documentclass[]{article}
 \usepackage[margin = .75in]{geometry}
+\usepackage{xcolor}
+\usepackage{mathtools, amsthm, amssymb}
 \usepackage{hyperref}
-
+\input{Preamble/example_env.sty}
+% =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+%% Parameters for \maketitle
+% =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 \title{Intermediate Guide to LaTeX}
 \author{GMA - UF Mathematics}
-\date{A date or \today works}
+\date{A date or \today\ works}
+
+% =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+%% Custom commands
+% =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\diffQuot}[2]{\lim_{h\to 0}\ \frac{#1(#2+h) - #1(#2)}{h}}
+\NewDocumentCommand{\greet}{m}{Hello #1!}
+\NewDocumentCommand{\ctext}{O{red!60} m}{\textcolor{#1}{#2}}
+\NewDocumentCommand{\Comments}{o m}{%
+    \IfNoValueTF{#1}%
+        {\textcolor{red}{\textbf{Note}:\  #2}}%     % no optional arg given
+    {\textcolor{blue}{\textbf{#1}:\ #2}}%         % optional arg given
+}
 
 \begin{document}
 \maketitle
 Some document classes have default parameters for \verb|title|, \verb|author|, \verb|date| which are set in the preamble by the commands: \verb|\title{title}|, \verb|\author{yours and collaborator names}|, \verb|\date{\today or a specific date}|. To then render these within the document, we use the command \verb|\maketitle|, which will render the above triplet. If \verb|\maketitle| is called after text, it will start a new page before rendering.
 
 \section{Custom commands}
-\verb|\newcommand|, \verb|\renewcommand|, \verb|arguments| (optional/required), \verb|\newenvironment|, 
-\section{Counters}
+\subsection{Standard vs Custom}
+While being able to customize your documents is nice, in collaborative settings too much customization leads to friction. For publication, journal editors will also be confused and put off my custom commands. Thus I can really only recommend simple commands for public documents and saving long customizations for personal projects/notes. Additionally, when creating new commands, we have to be worried about conflicts with existing commands.
 
-\section{More details}
+\subsection{Making new commands and environments}
+The main command to make a command is \verb|\newcommand{}{}|. When working with custom commands, we have to be more wary of how LaTeX interacts with white space. To be safe, when placing a new line in these custom commands, we will place parentheses \% before the line break to enforce when lines end. For example, if we want to shortcut \verb|\mathbb{R}| to just \verb|\R|, we can make a simple command placed in our preamble.
+\begin{verbatim}
+\newcommand{\R}{\mathbb{R}}
+\end{verbatim}
+Now we can use \verb|\R| (within math mode since the original command requires math mode) to write out: $\R$.
+
+For adding \emph{required} arguments, we use the optional argument for \verb|\newcommand{\commandName}[numArgs]{definition}|. Then, to refer to the argument, we can use \#1, \#2, $\dots$, depending on how many parameters are required. For example:
+\begin{verbatim}
+\newcommand{\diffQuot}[2]{\lim_{h\to 0}\ \frac{#1(#2+h) - #1(#2)}{h}}
+\end{verbatim}
+will let you automatically write out the difference quotient with control over the function name and variable. So we can write \verb|\[\diffQuot{f}{t}.\]| to achieve \[\diffQuot{f}{t}.\]
+
+For optional arguments, we skip past the default LaTeX implementation and use \verb|xparse| instead. Luckily, \verb|xparse| is included in most modern LaTeX kernels and is loaded by default. The default implementation only supports one optional parameter which must be the first. If that is all that is needed, use: \verb|\newcommand{\name}[numargs][default value]{definition}|.
+
+\subsection{xparse for commands}
+The \verb|xparse| package introduces a new command for defining new commands, \verb|NewDocumentCommand|, with the following setup
+\begin{verbatim}
+\NewDocumentCommand{\commandname}{args}{
+    definition
+}
+\end{verbatim}
+For this command, \verb|args| is a string separated by spaces for each argument. Options are listed below and can be used in any order.
+\begin{itemize}
+    \item \verb|m| — mandatory argument
+    \item \verb|O{default}| — optional argument in brackets with a default
+    \item \verb|o| - optional argument, returns -NoValue- if not given which can be used in conditional logic
+    \item \verb|s| - optional star(*)
+    \item \verb|g| - optional argument in braces \{\}
+    \item \verb|d()| - optional argument in any delimiter pair you choose
+\end{itemize}
+Below list 
+\begin{example}
+\textbf{m}andatory argument
+\begin{verbatim}
+\NewDocumentCommand{\greet}{m}{Hello #1!}
+
+\greet      % Throws an error as we are missing a required argument.
+\end{verbatim}
+\verb|\greet{GMA}| produces: \greet{GMA}
+\end{example}
+\begin{example}
+\textbf{O}ptional argument with \{default\} parameter paired with \textbf{m}andatory argument
+\begin{verbatim}
+\NewDocumentCommand{\ctext}{O{red!60} m}{\textcolor{#1}{#2}}
+\end{verbatim}
+\verb|\ctext{red text by default}| \ctext{red text by default}, but \verb|\ctext[blue!20]{Light blue is possible}| \ctext[blue!20]{Light blue is possible}
+\end{example}
+\begin{example}
+Utilizing \textbf{o}ptional argument's -NoValue- return.
+\begin{verbatim}
+\NewDocumentCommand{\Comments}{o m}{%
+    \IfNoValueTF{#1}%
+        {\textcolor{red}{\textbf{Note}:\ #2}}%    % no optional arg given
+    {\textcolor{blue}{\textbf{#1}:\ #2}}%        % optional arg given
+}
+\end{verbatim}
+This is a quick command if you're working with multiple collaborators and want to leave suggestions/comments/edits.
+
+\verb|\Comments[collaborator1]{A quick comment}| would place \Comments[collaborator1]{A quick comment}, but then the command recognizes when the optional command is missing: \verb|\Comments{A note perhaps}| \Comments{A note perhaps}.
+\end{example}
+\begin{example}
+    The optional \textbf{s}tar command immitates the behavior of \* to disable enumeration, such as with \verb|align| and \verb|align*|.
+\begin{verbatim}
+    \NewDocumentCommand{\prob}{s m}{
+        \ifBooleanTF{#1}%
+            {Problem (numbered): #2}    % Numbered behavior
+            {Problem (unnumbered): #2}  % Unnumbered behavior
+    }
+\end{verbatim}
+We can delve deeper into this after we talk about counters in Section~\ref{sec:Counters} and improve the implementation in Section~\ref{sec:Environs}
+\end{example}
+And many more options are available. See the \href{https://texdoc.org/serve/usrguide/0}{documentation} if you are curious.
+
+\subsection{Remaking old commands}
+Another option is to overwrite commands. For example if you like $\varepsilon$ more than $\epsilon$, then you can replace \verb|$\epsilon$| with its variable cousin by using \verb|\renewcommand{\epsilon}{\varepsilon}|. This generally is not recommended because it leads to confusion with collaborators and editors.
+
+\section{Counters}\label{sec:Counters}
+To track certain environments and commands, LaTeX relies on \verb|counters|. To make a counter, we use the command\verb|\newcounter{}| For example, we make a new counter called \verb|mycounter| via \verb|\newcounter{mycounter}|. From here we have the variable
+\begin{itemize}
+    \item \verb|mycounter| - is the \emph{counter} itself.
+\end{itemize}
+Some commands that interact with our new counter are:
+\begin{itemize}
+    \item \verb|\value{mycounter}| - is a command to return the current (integer) value of the counter
+    \item \verb|\themycounter| - is a print command, defaulting to \verb|\arabic{mycounter}|. We can renew this command to print \verb|\roman{mycounter}| if we would like roman numerals. Similarly for \verb|alpha| and \verb|Alpha|.
+    \item \verb|\stepcounter{mycounter}| - increments \verb|mycounter| by 1, resets subsidiary counters
+    \item \verb|\refstepcounter{mycounter}| - increments \verb|mycounter| by 1, resets subsidiary counters, adds a \verb|\label| anchor for reference.
+    \item \verb|\addtocounter{mycounter}{x}| - increments \verb|mycounter| by $x$, which can be negative
+    \item \verb|\setcounter{mycounter}{y}| - sets \verb|mycounter| to $y$
+\end{itemize}
+
+\subsection{Subsidiary counters}
+If we want our counter to be attached to a larger counter, or utilize a sub-counter then we can use:
+\verb|\newcounter{child}[parent]| to connect two counters. We can use 
+\begin{verbatim}
+\counterwithin{child}{parent}    % adds to reset list + redefines \thechild
+\counterwithout{child}{parent}   % removes from reset list + redefines \thechild    
+\end{verbatim}
+to define reset behaviors of the counters. This can be imitated without using parent/child counters by using the above commands.
+
+\section{Custom environments}\label{sec:Environs}
+If we want a custom environment, we can similarly use \verb|\newenvironment| from default LaTeX, or use \verb|\NewDocumentEnvironment| from xparse.
+
+\section{Diving deeper}
 \subsection{Figures}
 subcaption, wrapfig
 
@@ -22,21 +144,14 @@ subcaption, wrapfig
 Multi row/col
 \subsection{Clever Refs}
 
+\section{TikZ, pgfplots, and TikZ-cd}
 
 \section{Version control}
-\href{https://learngitbranching.js.org/}{Learn GIT}
+With Overleaf premium having git integration, an option for version control is via \href{https://learngitbranching.js.org/}{GIT}. I haven't played around too much with this implementation, but it doesn't seem like the option to branch is inherent to Overleaf.
 
-\section{TikZ, pgfplots, and TikZ-cd}
+\section{Intermediate to Expert and beyond}
+At this point, you should be able to verbalize what you want your LaTeX to do. With this, you can search for pre-existing questions or implementations that you might want and may already exist. Moving on from there, the next step would be to be a beginner dev, making your own class files and packages for example. Beyond that would be to understand the compiler and the engine. As you can imagine, these would be \emph{very} niche routes to go, as there are not really many reasons to do this. One suggestion that still lies in the realm of \textit{user} is to lower your dependency on Overleaf and move to working locally.
+
+\section{Running LaTeX locally}
+Overleaf is generally fine for everything we have already covered. However, you can also argue that Overleaf is very slow to use. It has compilation caps, limits to interfacing with R instead of Python, limits creation of custom commands, etc. To completely customize your \emph{workflow}, it is best to run a local version of LaTeX through an offline IDE and use git for version control and access in place of Overleaf. For an example of this workflow, see the amazing blog written by \href{https://castel.dev/}{Gilles Castel}. He has examples on how to implement \textit{snippets} and how to insert hand drawn figures into documents in real time, providing examples on how he was able to efficiently type complicated and diagrammed notes during lecture.
 \end{document}
-
-**Workflow & Tooling**
-- Understanding the full compilation pipeline (pdflatex → biber → pdflatex × 2)
-- Makefiles and `latexmk` for automated builds
-- Version control strategies for collaborative LaTeX projects
-- Diffing LaTeX documents with `latexdiff`
-
-**Debugging & Optimization**
-- Interpreting and fixing common warnings (overfull/underfull hboxes)
-- Suppressing vs. resolving package conflicts
-
-The key shift at this level is moving from *using* LaTeX to *controlling* it — writing reusable commands, managing large projects, and producing output that looks genuinely professional rather than just functional.
